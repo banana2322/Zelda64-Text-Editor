@@ -221,6 +221,11 @@ namespace Zelda64TextEditor
             {
                 bool readControlCode = false;
 
+                if (Enum.IsDefined(typeof(CustomEncoding), (int)testByte))
+                {
+                    charData.Add(((CustomEncoding)testByte).ToString()[0]);
+                    readControlCode = true;
+                }
                 // Control tags
                 if (testByte < 0x7F || testByte > 0xAF)
                 {
@@ -505,6 +510,13 @@ namespace Zelda64TextEditor
 
             for (int i = 0; i < TextData.Length; i++)
             {
+                CustomEncoding tst;
+                Enum.TryParse(TextData[i].ToString(), out tst);
+                if (Enum.IsDefined(typeof(CustomEncoding), tst))
+                {
+                    data.Add((byte)tst);
+                    continue;
+                }
                 // Not a control code, copy char to output buffer
                 if (TextData[i] != '<' && TextData[i] != '>')
                 {
